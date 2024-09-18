@@ -5,6 +5,12 @@ name = "pypi"
 
 [packages]
 flask = "*"
+wtforms = "*"
+cors = "*"
+pymysql = "*"
+python-dotenv = "*"
+flask-wtf = "*"
+flask-cors = "*"
 
 [dev-packages]
 
