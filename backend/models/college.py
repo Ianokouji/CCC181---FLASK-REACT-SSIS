@@ -27,6 +27,64 @@ class College:
         cursor.close()
         connection.close()
 
+    @staticmethod
+    def getCollege(College_Code):
+        connection = db_connection()
+        cursor = connection.cursor(pymysql.cursors.DictCursor)
+        sqlQuery = "SELECT * FROM Colleges WHERE College_Code = %s"
+        sqlValues = (College_Code,)
+        cursor.execute(sqlQuery,sqlValues)
+        college_code = cursor.fetchone()
+        cursor.close()
+        connection.close()
+        return college_code
+    
+    @staticmethod
+    def updateCollege(College_Code_New,College_Name_New,College_Code_Old):
+        connection = db_connection()
+        cursor = connection.cursor()
+        sqlQuery = "CALL UpdateCollege(%s,%s,%s)"
+        sqlValues = (College_Code_New,College_Name_New,College_Code_Old)
+        cursor.execute(sqlQuery,sqlValues)
+        connection.commit()
+        cursor.close()
+        connection.close()
+
+    @staticmethod
+    def deleteCollege(College_Code_Del):
+        connection = db_connection()
+        cursor = connection.cursor()
+        sqlQuery = "CALL DeleteCollege(%s)"
+        sqlValues = (College_Code_Del,)
+        cursor.execute(sqlQuery,sqlValues)
+        connection.commit()
+        cursor.close()
+        connection.close()
+
+    @staticmethod
+    def searchCollegeName(College_Name):
+        connection = db_connection()
+        cursor = connection.cursor(pymysql.cursors.DictCursor)
+        sqlQuery = "SELECT * FROM Colleges WHERE College_Name LIKE %s"
+        sqlValues = (f"%{College_Name}%",)
+        cursor.execute(sqlQuery,sqlValues)
+        colleges = cursor.fetchall()
+        cursor.close()
+        connection.close()
+        return colleges
+    
+    @staticmethod
+    def searchCollegeCode(College_Code):
+        connection = db_connection()
+        cursor = connection.cursor(pymysql.cursors.DictCursor)
+        sqlQuery = "SELECT * FROM Colleges WHERE College_Code LIKE %s"
+        sqlValues = (f"%{College_Code}%",)
+        cursor.execute(sqlQuery,sqlValues)
+        colleges = cursor.fetchall()
+        cursor.close()
+        connection.close()
+        return colleges
+
 
     # @staticmethod
     # def addCollege(College_Code, College_Name):
