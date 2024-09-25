@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useContext } from "react";
 import { CSRFContext } from "../App";
 import axios from "axios";
 
@@ -8,7 +8,7 @@ function CollegeDelete({ cancelDelete, deleteCallBack, collegeToDelete }) {
   const deleteCollege = async () => {
     try {
       if (!collegeToDelete) {
-        alert("College to Delete Could not be found");
+        alert("College to Delete could not be found!");
         return;
       }
 
@@ -33,7 +33,7 @@ function CollegeDelete({ cancelDelete, deleteCallBack, collegeToDelete }) {
     <>
       <div>
         <h3>Delete College</h3>
-        <h5>{`Would you like to delete ${collegeToDelete.College_Name}?`}</h5>
+        <p>{`Would you like to delete ${collegeToDelete.College_Name}?`}</p>
         <button onClick={deleteCollege}>Yes</button>
         <button onClick={cancelDelete}>No</button>
       </div>

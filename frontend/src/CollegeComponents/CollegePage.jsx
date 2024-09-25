@@ -19,7 +19,7 @@ function CollegePage() {
   const [isCollegeFormOpen, setCollegeForm] = useState(false);
   const [collegeToUpdate, setCollegeToUpdate] = useState({});
   const [isCollegeDeleteOpen, setCollegeDeleteComp] = useState(false);
-  const [collegeToDelete, setCollegeDelete] = useState({});
+  const [collegeToDelete, setCollegeToDelete] = useState({});
 
   const fetchColleges = async () => {
     try {
@@ -29,7 +29,7 @@ function CollegePage() {
       setColleges(response.data);
       console.log(response.data);
     } catch (err) {
-      console.error("Error fetching Students");
+      console.error("Error fetching Colleges");
     }
   };
 
@@ -86,7 +86,7 @@ function CollegePage() {
 
   const setDeleteCollege = (college) => {
     if (isCollegeDeleteOpen) return;
-    setCollegeDelete(college);
+    setCollegeToDelete(college);
     setCollegeDeleteComp(true);
   };
 
@@ -95,9 +95,9 @@ function CollegePage() {
 
   return (
     <div>
-      <span>
+      <div>
         <CollegeSearch setSearchResults={setSearchResults} />
-      </span>
+      </div>
       <button onClick={openCollegeForm}>Add College</button>
 
       {isCollegeFormOpen && (

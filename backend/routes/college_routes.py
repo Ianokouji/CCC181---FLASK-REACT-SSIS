@@ -72,7 +72,7 @@ def DeleteCollege(CollegeCodeDel):
     CollegeToDelete = College.getCollege(CollegeCodeDel)
 
     if not CollegeToDelete:
-        return jsonify({"message":"The college to delete does not exist"}), 404
+        return jsonify({"message":"The college to delete does NOT EXIST"}), 404
     
     try:
         College.deleteCollege(CollegeCodeDel)

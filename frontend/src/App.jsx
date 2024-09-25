@@ -4,6 +4,7 @@
 import { useEffect, useState, createContext } from "react";
 import "./App.css";
 import CollegePage from "./CollegeComponents/CollegePage";
+import ProgramPage from "./ProgramComponents/ProgramPage";
 import axios from "axios";
 
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
@@ -37,6 +38,7 @@ function App() {
         <Routes>
           <Route path="/home" element={<Home />} />
           <Route path="/api/colleges" element={<CollegePage />} />
+          <Route path="/api/programs" element={<ProgramPage/>} />
           <Route path="*" element={<Home />} />
         </Routes>
       </Router>
