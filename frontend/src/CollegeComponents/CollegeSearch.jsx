@@ -1,38 +1,66 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 function CollegeSearch({ setSearchResults }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchType, setSearchType] = useState("Code");
   const [isSearchNotFound, setSearchNotFound] = useState(false);
+  const [cancelTokenSource, setCancelTokenSource] = useState(null);
 
-  const handleInput = async (e) => {
-    const input = e.target.value;
-    setSearchQuery(input);
-
-    if (input.length === 0) {
-      setSearchResults([]);
-      return;
-    }
-
+  const searchCollege = async (input, cancelToken) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/colleges/search/${searchType}/${input}`
+        `http://localhost:5000/api/colleges/search/${searchType}/${input}`,
+        { cancelToken: cancelToken.token }
       );
       setSearchResults(response.data);
-      
 
       response.data.length === 0
         ? setSearchNotFound(true)
         : setSearchNotFound(false);
     } catch (error) {
-      console.error(`Error in searching Colleges:`, error);
+      if (axios.isCancel(error)) {
+        console.log("Request canceled", error.message);
+      } else {
+        console.error(`Error in searching Colleges:`, error);
+      }
     }
+  };
+
+  const handleInput = async (e) => {
+    setSearchQuery(e.target.value);
   };
 
   const handleType = (e) => {
     setSearchType(e.target.value);
   };
+
+  useEffect(() => {
+    if (searchQuery.length === 0) {
+      setSearchResults([]);
+      setSearchNotFound(false);
+    } else {
+      if (cancelTokenSource) {
+        cancelTokenSource.cancel("Operation cancel due to new request");
+      }
+
+      const source = axios.CancelToken.source();
+      setCancelTokenSource(source);
+
+      const timer = setTimeout(() => {
+        searchCollege(searchQuery, source);
+      }, 300);
+
+      return () => {
+        clearTimeout(timer);
+        if (source) {
+          source.cancel(
+            "Operation cancelled due to component unmount or new request"
+          );
+        }
+      };
+    }
+  }, [searchQuery, searchType]);
 
   return (
     <>
@@ -64,71 +92,3 @@ function CollegeSearch({ setSearchResults }) {
   );
 }
 export default CollegeSearch;
-
-
-
-
-// import { useState } from "react";
-// import axios from "axios";
-
-// function CollegeSearch({ setSearchResults }) {
-//   const [searchQuery, setSearchQuery] = useState(""); // This state should track the input field's value
-//   const [searchType, setSearchType] = useState("Code");
-//   const [isSearchNotFound, setSearchNotFound] = useState(false);
-
-//   const handleInput = async (e) => {
-//     const input = e.target.value;
-//     setSearchQuery(input); // Set the input value to searchQuery
-
-//     if (input.length === 0) {
-//       setSearchResults([]); // Clear results when input is empty
-//       return;
-//     }
-
-//     try {
-//       const response = await axios.get(
-//         `http://localhost:5000/api/colleges/search/${searchType}/${input}`
-//       );
-//       setSearchResults(response.data); // Update the search results in the parent
-//       console.log(response.data);
-
-//       response.data.length === 0
-//         ? setSearchNotFound(true)
-//         : setSearchNotFound(false);
-//     } catch (error) {
-//       console.error(`Error in searching Colleges:`, error);
-//     }
-//   };
-
-//   const handleType = (e) => {
-//     setSearchType(e.target.value);
-//   };
-
-//   return (
-//     <>
-//       <div>
-//         {isSearchNotFound && (
-//           <>
-//             <h3>College not Found</h3>
-//           </>
-//         )}
-//         <div>
-//           <select value={searchType} onChange={handleType}>
-//             <option value="Code">College Code</option>
-//             <option value="Name">College Name</option>
-//           </select>
-//         </div>
-
-//         <div>
-//           <input
-//             type="text"
-//             placeholder={`Search by ${searchType === "Code" ? "College Code" : "College Name"}`}
-//             value={searchQuery} // Bind input field to searchQuery
-//             onChange={handleInput}
-//           />
-//         </div>
-//       </div>
-//     </>
-//   );
-// }
-// export default CollegeSearch;

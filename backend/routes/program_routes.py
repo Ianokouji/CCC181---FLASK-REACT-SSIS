@@ -69,10 +69,12 @@ def deleteProgram(ProgramCodeDel):
 
 @program_routes.route('search/<Type>/<SearchQuery>', methods=['GET'])
 def searchProgram(Type,SearchQuery):
-    if Type == 'Code':
+    if Type == 'P_CODE':
         programs = Program.searchProgramCode(SearchQuery)
-    elif Type == 'Name':
+    elif Type == 'NAME':
         programs = Program.searchProgramName(SearchQuery)
+    elif Type == 'C_CODE':
+        programs = Program.searchCollegeCode(SearchQuery)
     else:
         return jsonify([]), 400
     

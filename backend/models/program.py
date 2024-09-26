@@ -86,6 +86,18 @@ class Program:
         cursor.close()
         connection.close()
         return programs
+    
+    @staticmethod
+    def searchCollegeCode(College_Code):
+        connection = db_connection()
+        cursor = connection.cursor(pymysql.cursors.DictCursor)
+        sqlQuery = "SELECT * FROM Programs WHERE College_Code LIKE %s"
+        sqlValues = (f"%{College_Code}%",)
+        cursor.execute(sqlQuery,sqlValues)
+        programs = cursor.fetchall()
+        cursor.close()
+        connection.close()
+        return programs
 
     
 
