@@ -17,6 +17,7 @@ from flask_cors import CORS
 from backend.routes import college_routes
 from backend.routes import program_routes
 from backend.routes import config_routes
+from backend.routes import student_routes
 
 
 def create_app():
@@ -29,6 +30,7 @@ def create_app():
     app.register_blueprint(college_routes, url_prefix='/api/colleges')
     app.register_blueprint(program_routes, url_prefix='/api/programs')
     app.register_blueprint(config_routes,url_prefix='/api/csrf_token')
+    app.register_blueprint(student_routes,url_prefix='/api/students')
 
     # @app.after_request
     # def after_request(response):

@@ -23,6 +23,7 @@ function Home() {
         <div className="PageLinks">
         <Link to='/api/colleges' className='nav-link'>College Page</Link>
         <Link to='/api/programs' className='nav-link'>Programs Page</Link>
+        <Link to='api/students' className='nav-link'>Students Page</Link>
         </div>
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}

@@ -4,13 +4,13 @@ import axios from "axios";
 
 
 function ProgramDelete({cancelDelete, deleteCallback, programToDelete}) {
-    const csrfToken = useContext(CSRFContext)
+    const csrfToken = useContext(CSRFContext);
     
     const deleteProgram = async () => {
         try {
             if(!programToDelete) {
-                alert("Program to Delete could not be found!")
-                return
+                alert("Program to Delete could not be found!");
+                return;
             }
 
             const request = await axios.delete(

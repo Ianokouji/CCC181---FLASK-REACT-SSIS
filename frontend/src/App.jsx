@@ -5,6 +5,8 @@ import { useEffect, useState, createContext } from "react";
 import "./App.css";
 import CollegePage from "./CollegeComponents/CollegePage";
 import ProgramPage from "./ProgramComponents/ProgramPage";
+import StudentPage from "./StudentComponents/StudentPage";
+
 import axios from "axios";
 
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
@@ -39,6 +41,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/api/colleges" element={<CollegePage />} />
           <Route path="/api/programs" element={<ProgramPage/>} />
+          <Route path="api/students" element={<StudentPage/>} />
           <Route path="*" element={<Home />} />
         </Routes>
       </Router>

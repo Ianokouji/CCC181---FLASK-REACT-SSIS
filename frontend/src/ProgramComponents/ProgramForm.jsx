@@ -61,7 +61,7 @@ function ProgramForm({
       updateCallBack();
     } catch (error) {
       alert(error?.response?.data?.message);
-      console.error("Error adding Program:", error?.response?.data?.message);
+      console.error("Error updating Program:", error?.response?.data?.message);
     }
   };
 
