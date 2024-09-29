@@ -6,6 +6,7 @@ function CollegeForm({
   collegeToUpdate = {},
   updateCallBack,
   closeCollegeForm,
+  errorCallBack,
 }) {
   const [college_name, setCollegeName] = useState("");
   const [college_code, setCollegeCode] = useState("");
@@ -40,13 +41,12 @@ function CollegeForm({
           withCredentials: true,
         }
       );
-      console.log("College updated successfully", response.config.data);
+      console.log("College updated successfully", response.data);
       setCollegeCode("");
       setCollegeName("");
-      updateCallBack();
+      updateCallBack(response.data.message);
     } catch (error) {
-      alert(error?.response?.data?.message);
-      console.error(error?.response?.data?.message);
+      errorCallBack(`Error in updating College ${error?.response?.data?.message}`);
     }
   };
 
@@ -71,13 +71,12 @@ function CollegeForm({
           withCredentials: true,
         }
       );
-      console.log("College added successfully:", response.config.data);
+      console.log("College added successfully:", response.data);
       setCollegeCode("");
       setCollegeName("");
-      updateCallBack();
+      updateCallBack(response.data.message);
     } catch (error) {
-      alert(error?.response?.data?.message);
-      console.error("Error adding college:", error?.response?.data?.message);
+      errorCallBack(`Error adding college: ${error?.response?.data?.message}`)
     }
   };
 

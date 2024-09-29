@@ -1,7 +1,7 @@
-function ProgramList({ setDeleteProgram ,setUpdateProgram,programs }) {
+function ProgramList({ setDeleteProgram, setUpdateProgram, programs }) {
   return (
     <div>
-        <h1>Programs</h1>
+      <h1>Programs</h1>
       <table>
         <thead>
           <tr>
@@ -12,14 +12,21 @@ function ProgramList({ setDeleteProgram ,setUpdateProgram,programs }) {
         </thead>
         <tbody>
           {programs.map((program) => {
+            if (!program.Program_Code) {
+              return;
+            }
             return (
               <tr key={program.Program_Code}>
                 <td>{program.Program_Code}</td>
                 <td>{program.Program_Name}</td>
                 <td>{program.College_Code}</td>
                 <td>
-                  <button onClick={() => setUpdateProgram(program)}>Update</button>
-                  <button onClick={() => setDeleteProgram(program)}>Delete</button>
+                  <button onClick={() => setUpdateProgram(program)}>
+                    Update
+                  </button>
+                  <button onClick={() => setDeleteProgram(program)}>
+                    Delete
+                  </button>
                 </td>
               </tr>
             );

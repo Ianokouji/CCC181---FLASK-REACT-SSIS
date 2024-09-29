@@ -4,6 +4,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.
 
 from flask import Blueprint,jsonify,request
 from backend.models import Program
+from pymysql.err import IntegrityError
 
 program_routes = Blueprint('program_routes',__name__)
 
@@ -23,12 +24,19 @@ def addProgram():
     if not Program_Code or not Program_Name or not College_Code:
         return jsonify({"message":"Fields are missing ERROR"}), 400
     
+    capitalized_Program_Code = Program_Code.upper()
     try:
-        Program.addProgram(Program_Code,Program_Name,College_Code)
+        Program.addProgram(capitalized_Program_Code,Program_Name,College_Code)
+
+    except IntegrityError as e:
+        if e.args[0] == 1062:
+            return jsonify({"message":f"Duplicate entry found in the fields for Program Code {Program_Code}"}),409
+        else:
+            return jsonify({"message":f"Error! Database error: {str(e)}"}),400
     except Exception as e:
         return jsonify({"message":f"Error in adding Program has occured {str(e)}"}),400
 
-    return jsonify({"message":"Program Added Successfully"}), 201
+    return jsonify({"message":f"Program with code {Program_Code} Added Successfully"}), 201
 
 
 @program_routes.route('/update/<ProgramCodeUp>',methods=['PATCH'])
@@ -43,8 +51,15 @@ def updateProgram(ProgramCodeUp):
     Program_Name = data.get("Program_Name",ProgramToUpdate['Program_Name'])
     College_Code = data.get("College_Code",ProgramToUpdate['College_Code'])
 
+    capitalized_Program_Code = Program_Code.upper()
     try:
-        Program.updateProgram(Program_Code,Program_Name,College_Code,ProgramCodeUp)
+        Program.updateProgram(capitalized_Program_Code,Program_Name,College_Code,ProgramCodeUp)
+
+    except IntegrityError as e:
+        if e.args[0] == 1062:
+            return jsonify({"message":f"Duplicate entry found in the fields for Program Code {Program_Code}"}),409
+        else:
+            return jsonify({"message":f"Error! Database error: {str(e)}"}),400
     except Exception as e:
         return jsonify({"message":f"Error in UPDATING Program: {str(e)}"}), 400
 
@@ -64,7 +79,7 @@ def deleteProgram(ProgramCodeDel):
     except Exception as e:
         return jsonify({"message":f"Error in DELETING Program: {str(e)}"}),400
 
-    return jsonify({"message":"Program Deleted Successfully"}),200
+    return jsonify({"message":f"Program with Code {ProgramCodeDel} Deleted Successfully"}),200
 
 
 @program_routes.route('search/<Type>/<SearchQuery>', methods=['GET'])

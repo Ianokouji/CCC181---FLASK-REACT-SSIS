@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import StudentList from "./StudentList";
 import StundentForm from "./StudentForm";
 import StudentDelete from "./StudentDelete";
-import StudentSearch from "./StudentSearch"
+import StudentSearch from "./StudentSearch";
+import Failed from "../UtilityComponents/Failed";
+import Success from "../UtilityComponents/Success";
 import axios from "axios";
-
 
 function StudentPage() {
   const [students, setStudents] = useState([]);
@@ -13,6 +14,10 @@ function StudentPage() {
   const [isStudentDeleteOpen, setStudentDeleteComp] = useState(false);
   const [studentToDelete, setStudentToDelete] = useState({});
   const [searchResults, setSearchResults] = useState([]);
+  const [modalState, setModalState] = useState({
+    type: null,
+    message: "",
+  });
 
   const fetchStudents = async () => {
     try {
@@ -31,15 +36,21 @@ function StudentPage() {
   }, []);
 
   // Callback Functions
-  const afterUpdateStudent = () => {
+  const afterUpdateStudent = (message) => {
     fetchStudents();
     setStudentForm(false);
+    showModal("success", message);
   };
 
-  const afterDeleteStudent = () => {
+  const afterDeleteStudent = (message) => {
     fetchStudents();
     setStudentDeleteComp(false);
-  }
+    showModal("success", message);
+  };
+
+  const errorCallback = (message) => {
+    showModal("failed", message);
+  };
 
   // Modal Operations
   const closeStudentForm = () => {
@@ -49,11 +60,29 @@ function StudentPage() {
 
   const closeStudentDelete = () => {
     setStudentDeleteComp(false);
-    setStudentToDelete({})
-  }
+    setStudentToDelete({});
+  };
 
   const openStudentForm = () => {
     setStudentForm(true);
+  };
+
+  const closeModal = function () {
+    setModalState({
+      type: null,
+      message: "",
+    });
+  };
+
+  const showModal = function (type, message) {
+    setModalState({
+      type: type,
+      message: message,
+    });
+
+    setTimeout(() => {
+      closeModal();
+    }, 4000);
   };
 
   // Setting Student for Operations
@@ -70,10 +99,17 @@ function StudentPage() {
   };
 
   // Conditional Render of Students
-  const displaySearch = searchResults?.length > 0 ? searchResults : students
+  const displaySearch = searchResults?.length > 0 ? searchResults : students;
 
   return (
     <div>
+      {modalState.type === "failed" && (
+        <Failed onClose={closeModal} Message={modalState.message} />
+      )}
+
+      {modalState.type === "success" && (
+        <Success Message={modalState.message} onclose={closeModal} />
+      )}
       <div>
         <StudentSearch setSearchResults={setSearchResults} />
       </div>
@@ -84,14 +120,15 @@ function StudentPage() {
           studentToUpdate={studentToUpdate}
           updateCallBack={afterUpdateStudent}
           closeStudentForm={closeStudentForm}
+          errorCallback={errorCallback}
         />
       )}
 
       {isStudentDeleteOpen && (
         <StudentDelete
-        cancelDelete={closeStudentDelete}
-        deleteCallBack={afterDeleteStudent}
-        studentToDelete={studentToDelete}
+          cancelDelete={closeStudentDelete}
+          deleteCallBack={afterDeleteStudent}
+          studentToDelete={studentToDelete}
         />
       )}
       <StudentList

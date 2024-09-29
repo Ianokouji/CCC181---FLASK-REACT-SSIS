@@ -3,15 +3,12 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 from flask import Blueprint,jsonify,request
-
-from flask_wtf.csrf import CSRFProtect
-
-
 from backend.models import College
+from pymysql.err import IntegrityError
 
 college_routes = Blueprint('college_routes', __name__)
 
-csrf = CSRFProtect()
+
 
 
 
@@ -25,7 +22,6 @@ def getColleges():
 def addCollege():
     College_Code = request.json.get("College_Code")
     College_Name = request.json.get("College_Name")
-    print(request.headers)
 
     if not College_Code or not College_Name:
         return(
@@ -33,13 +29,19 @@ def addCollege():
             400,
         )
 
+    capitalized_College_Code = College_Code.upper()
     try: 
-        College.addCollege(College_Code,College_Name)
+        College.addCollege(capitalized_College_Code,College_Name)
+    except IntegrityError as e:
+        if e.args[0] == 1062:
+            return jsonify({"message":f"Error! Duplicate entry found in the fields for College Code {College_Code}"}),409
+        else:
+            return jsonify({"message":f"Error: Database error: {str(e)}"}),400
     except Exception as e:
         print(e)
         return jsonify({"message": f"There has been a problem adding college: {str(e)}"}),400
     
-    return jsonify({"message": "College Added successfully"}), 201
+    return jsonify({"message": f"College with code {College_Code} Added successfully"}), 201
 
 
 @college_routes.route('/update/<CollegeCodeUp>',methods=['PATCH'])
@@ -52,14 +54,14 @@ def UpdateCollege(CollegeCodeUp):
     College_Code = data.get("College_Code", CollegeToUpdate['College_Code'])
     College_Name = data.get("College_Name", CollegeToUpdate['College_Name'])
 
-
-    # Log the values for debugging purposes
-    print(f"Received College_Code: {College_Code}")
-    print(f"Received College_Name: {College_Name}")
-    print(f"Received Old College Code: {CollegeCodeUp}")
-
+    capitalized_College_Code = College_Code.upper()
     try: 
-        College.updateCollege(College_Code,College_Name,CollegeCodeUp)
+        College.updateCollege(capitalized_College_Code,College_Name,CollegeCodeUp)
+    except IntegrityError as e:
+        if e.args[0] == 1062:
+            return jsonify({"message":f"Duplicate entry found in the fields for College Code {College_Code}"}),409
+        else:
+            return jsonify({"message":f"Error! Database error: {str(e)}"}),400
     except Exception as e:
         return jsonify({"message": f"Error in UPDATING College: {str(e)}"}), 400
     
@@ -79,7 +81,7 @@ def DeleteCollege(CollegeCodeDel):
     except Exception as e:
         return jsonify({"message":f"Error in DELETING College: {str(e)}"}), 400
     
-    return jsonify({"message":"College Deleted Successfully"}), 200
+    return jsonify({"message":f"College with Code {CollegeCodeDel} Deleted Successfully"}), 200
 
 
 @college_routes.route('/search/<Type>/<SearchQuery>',methods=['GET'])

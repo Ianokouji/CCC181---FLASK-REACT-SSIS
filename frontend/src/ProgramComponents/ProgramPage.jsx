@@ -3,6 +3,8 @@ import ProgramList from "./ProgramList";
 import ProgramForm from "./ProgramForm";
 import ProgramDelete from "./ProgramDelete";
 import ProgramSearch from "./ProgramSearch";
+import Failed from "../UtilityComponents/Failed";
+import Success from "../UtilityComponents/Success";
 import axios from "axios";
 
 function ProgramPage() {
@@ -12,6 +14,10 @@ function ProgramPage() {
   const [isProgramDeleteOpen, setProgramDeleteComp] = useState(false);
   const [programTodelete, setProgramToDelete] = useState({});
   const [searchResults, setSearchResults] = useState([]);
+  const [modalState, setModalState] = useState({
+    type: null,
+    message: "",
+  });
 
   const fetchPrograms = async () => {
     try {
@@ -30,14 +36,20 @@ function ProgramPage() {
   }, []);
 
   // Callback Functions
-  const afterUpdateProgram = () => {
+  const afterUpdateProgram = (message) => {
     fetchPrograms();
     setProgramForm(false);
+    showModal("success", message);
   };
 
-  const afterDeleteProgram = () => {
+  const afterDeleteProgram = (message) => {
     fetchPrograms();
     setProgramDeleteComp(false);
+    showModal("success", message);
+  };
+
+  const errorCallBack = (message) => {
+    showModal("failed", message);
   };
 
   // Modal Operations
@@ -53,6 +65,24 @@ function ProgramPage() {
 
   const openProgramForm = () => {
     setProgramForm(true);
+  };
+
+  const closeModal = function () {
+    setModalState({
+      type: null,
+      message: "",
+    });
+  };
+
+  const showModal = function (type, message) {
+    setModalState({
+      type: type,
+      message: message,
+    });
+
+    setTimeout(() => {
+      closeModal();
+    }, 4000);
   };
 
   // Setting Program for Operations
@@ -73,6 +103,13 @@ function ProgramPage() {
 
   return (
     <div>
+      {modalState.type === "failed" && (
+        <Failed onClose={closeModal} Message={modalState.message} />
+      )}
+
+      {modalState.type === "success" && (
+        <Success onclose={closeModal} Message={modalState.message} />
+      )}
       <div>
         <ProgramSearch setSearchResults={setSearchResults} />
       </div>
@@ -83,6 +120,7 @@ function ProgramPage() {
           programToUpdate={programToUpdate}
           updateCallBack={afterUpdateProgram}
           closeProgramForm={closeProgramForm}
+          errorCallBack={errorCallBack}
         />
       )}
 

@@ -15,7 +15,10 @@ function StudentList({ setDeleteStudent, setUpdateStudent, students }) {
         </thead>
         <tbody>
           {students.map((student) => {
-             console.log(student.Student_Id)
+            console.log(student.Student_Id);
+            if (!student.Student_Id) {
+              return;
+            }
             return (
               <tr key={student.Student_Id}>
                 <td>{student.Student_Id}</td>
@@ -25,8 +28,12 @@ function StudentList({ setDeleteStudent, setUpdateStudent, students }) {
                 <td>{student.Gender}</td>
                 <td>{student.Program_Code}</td>
                 <td>
-                    <button onClick={() => setUpdateStudent(student)}>Update</button>
-                    <button onClick={() => setDeleteStudent(student)}>Delete</button>
+                  <button onClick={() => setUpdateStudent(student)}>
+                    Update
+                  </button>
+                  <button onClick={() => setDeleteStudent(student)}>
+                    Delete
+                  </button>
                 </td>
               </tr>
             );

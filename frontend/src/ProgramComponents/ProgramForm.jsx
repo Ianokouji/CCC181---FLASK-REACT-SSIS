@@ -6,6 +6,7 @@ function ProgramForm({
   programToUpdate = {},
   updateCallBack,
   closeProgramForm,
+  errorCallBack,
 }) {
   const [colleges, setColleges] = useState([]);
   const [program_name, setProgramName] = useState("");
@@ -55,13 +56,12 @@ function ProgramForm({
           withCredentials: true,
         }
       );
-      console.log("Program updated successsfully:", response.config.data);
+      console.log("Program updated successsfully:", response.data);
       setProgramCode("");
       setProgramName("");
-      updateCallBack();
+      updateCallBack(response.data.message);
     } catch (error) {
-      alert(error?.response?.data?.message);
-      console.error("Error updating Program:", error?.response?.data?.message);
+      errorCallBack(`Error in updating Program: ${error?.response?.data?.message}`)
     }
   };
 
@@ -86,13 +86,12 @@ function ProgramForm({
           withCredentials: true,
         }
       );
-      console.log("Program added successsfully:", response.config.data);
+      console.log("Program added successsfully:", response.data);
       setProgramCode("");
       setProgramName("");
-      updateCallBack();
+      updateCallBack(response.data.message);
     } catch (error) {
-      alert(error?.response?.data?.message);
-      console.error("Error adding Program:", error?.response?.data?.message);
+      errorCallBack(`Error adding Program: ${error?.response?.data?.message}`)
     }
   };
 
@@ -123,7 +122,7 @@ function ProgramForm({
         />
         <input
           type="text"
-          placeholder="College Name"
+          placeholder="Program Name"
           value={program_name}
           onChange={(e) => setProgramName(e.target.value)}
         />

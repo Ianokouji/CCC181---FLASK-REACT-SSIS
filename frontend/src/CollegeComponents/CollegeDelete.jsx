@@ -21,7 +21,7 @@ function CollegeDelete({ cancelDelete, deleteCallBack, collegeToDelete }) {
           withCredentials: true,
         }
       );
-      deleteCallBack();
+      deleteCallBack(request.data.message);
       console.log("College deleted successfully");
     } catch (error) {
       alert(error);

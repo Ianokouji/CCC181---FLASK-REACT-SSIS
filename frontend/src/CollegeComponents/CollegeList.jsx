@@ -1,7 +1,3 @@
-import { useEffect, useState } from "react";
-// import { CSRFContext } from "./CollegePage";
-import axios from "axios";
-
 function CollegeList({ setDeleteCollege, setUpdateCollege, colleges }) {
   return (
     <div>
@@ -16,6 +12,9 @@ function CollegeList({ setDeleteCollege, setUpdateCollege, colleges }) {
         </thead>
         <tbody>
           {colleges.map((college) => {
+            if (!college.College_Code) {
+              return;
+            }
             return (
               <tr key={college.College_Code}>
                 <td>{college.College_Code}</td>

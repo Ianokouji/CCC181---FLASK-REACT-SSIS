@@ -19,9 +19,12 @@ function ProgramSearch({ setSearchResults }) {
       );
       setSearchResults(response.data);
 
-      response.data.length === 0
-        ? setSearchNotFound(true)
-        : setSearchNotFound(false);
+      if (response.data.length === 0) {
+        setSearchNotFound(true);
+        setSearchResults([""]);
+      } else {
+        setSearchNotFound(false);
+      }
     } catch (error) {
       if (axios.isCancel(error)) {
         console.log("Request canceled", error.message);
