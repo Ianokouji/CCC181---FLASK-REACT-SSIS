@@ -1,3 +1,20 @@
+/**
+ * ProgramPage Component
+ * 
+ * This is the main component for managing programs. It handles:
+ * - Listing programs.
+ * - Searching for programs.
+ * - Adding, updating, and deleting programss.
+ * 
+ * It includes multiple child components such as `ProgramList`, `ProgramForm`, `ProgramDelete`, 
+ * and `ProgramSearch`. It also manages the modal state for displaying success or error messages.
+ * 
+ * 
+ * */
+
+
+
+
 import { useState, useEffect } from "react";
 import ProgramList from "./ProgramList";
 import ProgramForm from "./ProgramForm";
@@ -5,8 +22,11 @@ import ProgramDelete from "./ProgramDelete";
 import ProgramSearch from "./ProgramSearch";
 import Failed from "../UtilityComponents/Failed";
 import Success from "../UtilityComponents/Success";
+import Navbar from "../UtilityComponents/Navbar";
 import axios from "axios";
 
+
+// Component Initialization
 function ProgramPage() {
   const [programs, setPrograms] = useState([]);
   const [programToUpdate, setProgramToUpdate] = useState({});
@@ -31,6 +51,7 @@ function ProgramPage() {
     }
   };
 
+  // Fetch student data everytime the component mounts
   useEffect(() => {
     fetchPrograms();
   }, []);
@@ -67,6 +88,8 @@ function ProgramPage() {
     setProgramForm(true);
   };
 
+
+  // Modal Operations for responses
   const closeModal = function () {
     setModalState({
       type: null,
@@ -82,7 +105,7 @@ function ProgramPage() {
 
     setTimeout(() => {
       closeModal();
-    }, 4000);
+    }, 10000);
   };
 
   // Setting Program for Operations
@@ -101,42 +124,55 @@ function ProgramPage() {
   // Conditional Render of Programs
   const displaySearch = searchResults?.length > 0 ? searchResults : programs;
 
+
+  // Rendering the child components and passing the proper props
   return (
-    <div>
-      {modalState.type === "failed" && (
-        <Failed onClose={closeModal} Message={modalState.message} />
-      )}
-
-      {modalState.type === "success" && (
-        <Success onclose={closeModal} Message={modalState.message} />
-      )}
-      <div>
-        <ProgramSearch setSearchResults={setSearchResults} />
+    <div className="parent-div">
+      <div className="side-div">
+        <Navbar/>
       </div>
+      <div className="outer-content-div">
+        <div className="search-div">
+          <ProgramSearch setSearchResults={setSearchResults} />
+        </div>
 
-      <button onClick={openProgramForm}>Add Program</button>
-      {isProgramFormOpen && (
-        <ProgramForm
-          programToUpdate={programToUpdate}
-          updateCallBack={afterUpdateProgram}
-          closeProgramForm={closeProgramForm}
-          errorCallBack={errorCallBack}
-        />
-      )}
+        <div className="content-div program-content">
+          <div className="transparency">
+            {modalState.type === "failed" && (
+              <Failed onClose={closeModal} Message={modalState.message} />
+            )}
 
-      {isProgramDeleteOpen && (
-        <ProgramDelete
-          cancelDelete={closeProgramDelete}
-          deleteCallback={afterDeleteProgram}
-          programToDelete={programTodelete}
-        />
-      )}
+            {modalState.type === "success" && (
+              <Success onclose={closeModal} Message={modalState.message} />
+            )}
+            <button className="add-btn" onClick={openProgramForm}>
+              Add Program
+            </button>
+            {isProgramFormOpen && (
+              <ProgramForm
+                programToUpdate={programToUpdate}
+                updateCallBack={afterUpdateProgram}
+                closeProgramForm={closeProgramForm}
+                errorCallBack={errorCallBack}
+              />
+            )}
 
-      <ProgramList
-        setDeleteProgram={setDeleteProgram}
-        setUpdateProgram={setUpdateProgram}
-        programs={displaySearch}
-      />
+            {isProgramDeleteOpen && (
+              <ProgramDelete
+                cancelDelete={closeProgramDelete}
+                deleteCallback={afterDeleteProgram}
+                programToDelete={programTodelete}
+              />
+            )}
+
+            <ProgramList
+              setDeleteProgram={setDeleteProgram}
+              setUpdateProgram={setUpdateProgram}
+              programs={displaySearch}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

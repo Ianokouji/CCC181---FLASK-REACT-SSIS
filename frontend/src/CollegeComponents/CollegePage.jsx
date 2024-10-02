@@ -1,14 +1,29 @@
-import { useEffect, useState, useContext, createContext } from "react";
+/**
+ * CollegePage Component
+ * 
+ * This is the main component for managing colleges. It handles:
+ * - Listing colleges.
+ * - Searching for colleges.
+ * - Adding, updating, and deleting colleges.
+ * 
+ * It includes multiple child components such as `CollegeList`, `CollegeForm`, `CollegeDelete`, 
+ * and `CollegeSearch`. It also manages the modal state for displaying success or error messages.
+ * 
+ * 
+ * */
+
+import { useEffect, useState} from "react";
 import CollegeList from "./CollegeList";
 import CollegeForm from "./CollegeForm";
 import CollegeDelete from "./CollegeDelete";
 import CollegeSearch from "./CollegeSearch";
 import Failed from "../UtilityComponents/Failed";
 import Success from "../UtilityComponents/Success";
+import Navbar from "../UtilityComponents/Navbar";
 import axios from "axios";
 
 
-
+// Component Initialization
 function CollegePage() {
   const [colleges, setColleges] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
@@ -16,7 +31,7 @@ function CollegePage() {
   const [collegeToUpdate, setCollegeToUpdate] = useState({});
   const [isCollegeDeleteOpen, setCollegeDeleteComp] = useState(false);
   const [collegeToDelete, setCollegeToDelete] = useState({});
-  const [modalState,setModalState] = useState({
+  const [modalState, setModalState] = useState({
     type: null,
     message: "",
   });
@@ -33,6 +48,7 @@ function CollegePage() {
     }
   };
 
+  // Fetch student data everytime the component mounts
   useEffect(() => {
     fetchColleges();
   }, []);
@@ -41,18 +57,18 @@ function CollegePage() {
   const afterUpdateCollege = (message) => {
     fetchColleges();
     setCollegeForm(false);
-    showModal("success",message);
+    showModal("success", message);
   };
 
   const afterDeleteCollege = (message) => {
     fetchColleges();
     setCollegeDeleteComp(false);
-    showModal("success",message);
+    showModal("success", message);
   };
 
   const errorCallBack = (message) => {
-    showModal("failed",message);
-  }
+    showModal("failed", message);
+  };
 
   // Modal Operations
   const openCollegeForm = () => {
@@ -68,15 +84,16 @@ function CollegePage() {
     setCollegeDeleteComp(false);
   };
 
-  
-  const closeModal = function(){
+
+  // Modal Operations for responses
+  const closeModal = function () {
     setModalState({
       type: null,
       message: "",
     });
   };
 
-  const showModal = function(type,message){
+  const showModal = function (type, message) {
     setModalState({
       type: type,
       message: message,
@@ -84,10 +101,8 @@ function CollegePage() {
 
     setTimeout(() => {
       closeModal();
-    },4000);
+    }, 10000);
   };
-
-
 
   // Setting College for Update
   const setUpdateCollege = (college) => {
@@ -105,36 +120,54 @@ function CollegePage() {
   // Conditional Render of Colleges
   const displaySearch = searchResults?.length > 0 ? searchResults : colleges;
 
+
+  // Rendering the child components and passing the proper props
   return (
-    <div>
-      {modalState.type === 'failed' && <Failed onClose={closeModal} Message={modalState.message}/>}
-
-      {modalState.type === 'success' && <Success onclose={closeModal} Message={modalState.message}/>}
-      <div>
-        <CollegeSearch setSearchResults={setSearchResults} />
+    <div className="parent-div">
+      <div className="side-div">
+        <Navbar/>
       </div>
-      <button onClick={openCollegeForm}>Add College</button>
+      <div className="outer-content-div">
+        <div className="search-div">
+          <CollegeSearch setSearchResults={setSearchResults} />
+        </div>
 
-      {isCollegeFormOpen && (
-        <CollegeForm
-          collegeToUpdate={collegeToUpdate}
-          updateCallBack={afterUpdateCollege}
-          closeCollegeForm={closeCollegeForm}
-          errorCallBack={errorCallBack}
-        />
-      )}
-      {isCollegeDeleteOpen && (
-        <CollegeDelete
-          cancelDelete={closeCollegeDelete}
-          deleteCallBack={afterDeleteCollege}
-          collegeToDelete={collegeToDelete}
-        />
-      )}
-      <CollegeList
-        setDeleteCollege={setDeleteCollege}
-        setUpdateCollege={setUpdateCollege}
-        colleges={displaySearch}
-      />
+        <div className="content-div college-content">
+          <div className="transparency">
+            {modalState.type === "failed" && (
+              <Failed onClose={closeModal} Message={modalState.message} />
+            )}
+
+            {modalState.type === "success" && (
+              <Success onclose={closeModal} Message={modalState.message} />
+            )}
+            <button className="add-btn" onClick={openCollegeForm}>
+              Add College
+            </button>
+
+            {isCollegeFormOpen && (
+              <CollegeForm
+                collegeToUpdate={collegeToUpdate}
+                updateCallBack={afterUpdateCollege}
+                closeCollegeForm={closeCollegeForm}
+                errorCallBack={errorCallBack}
+              />
+            )}
+            {isCollegeDeleteOpen && (
+              <CollegeDelete
+                cancelDelete={closeCollegeDelete}
+                deleteCallBack={afterDeleteCollege}
+                collegeToDelete={collegeToDelete}
+              />
+            )}
+            <CollegeList
+              setDeleteCollege={setDeleteCollege}
+              setUpdateCollege={setUpdateCollege}
+              colleges={displaySearch}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

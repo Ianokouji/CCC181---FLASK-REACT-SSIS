@@ -1,3 +1,13 @@
+/**
+ * StudentSearch Component
+ * 
+ * This component provides a search bar that allows users to search for students by either 
+ * Student ID or Name, using a dropdown to choose the search type.
+ * 
+ * 
+ * */
+
+
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -5,8 +15,9 @@ function StudentSearch({ setSearchResults }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchType, setSearchType] = useState("ID");
   const [isSearchNotFound, setSearchNotFound] = useState(false);
-  const [cancelTokenSource, setCancelTokenSource] = useState(null); // Track the cancel token
+  const [cancelTokenSource, setCancelTokenSource] = useState(null);             // Track the cancel token
 
+  // Sends request to the backend and returns the response to the parent component
   const searchStudent = async (input, cancelToken) => {
     try {
       const response = await axios.get(
@@ -32,10 +43,7 @@ function StudentSearch({ setSearchResults }) {
     }
   };
 
-  const handleInput = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
+  
   useEffect(() => {
     if (searchQuery.length === 0) {
       // Clear search results if input is empty
@@ -66,20 +74,28 @@ function StudentSearch({ setSearchResults }) {
         }
       };
     }
-  }, [searchQuery, searchType]); // Added searchType as a dependency to reset on type change
+  }, [searchQuery, searchType]); 
 
+  // Handler for the changes in the fields 
   const handleType = (e) => {
     setSearchType(e.target.value);
   };
 
+  const handleInput = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+
+  // Available search types
   const searchTypes = {
     ID: "Student ID",
     FIRST: "First Name",
     LAST: "Last Name",
   };
 
+  // Skeleton render of the Student search Component
   return (
-    <div>
+    <div className="search">
       {isSearchNotFound && <h3>Student Not Found</h3>}
       <div>
         <select value={searchType} onChange={handleType}>

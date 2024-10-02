@@ -1,8 +1,19 @@
+/**
+ * StudentList Component
+ * 
+ * This component renders a table of students and allows users to initiate actions 
+ * to update or delete a student. Each student row includes buttons for editing or deleting.
+ * */
+
+import { FaTrash,FaRegEdit } from "react-icons/fa";
+
+// Recieves the `students` props from the the parent component to render available students
 function StudentList({ setDeleteStudent, setUpdateStudent, students }) {
   return (
     <div>
       <h1>Students</h1>
       <table>
+        <div className="table-container-student">
         <thead>
           <tr>
             <th>Student ID</th>
@@ -28,17 +39,18 @@ function StudentList({ setDeleteStudent, setUpdateStudent, students }) {
                 <td>{student.Gender}</td>
                 <td>{student.Program_Code}</td>
                 <td>
-                  <button onClick={() => setUpdateStudent(student)}>
-                    Update
+                  <button className="update-btn" onClick={() => setUpdateStudent(student)}>
+                    <FaRegEdit/>
                   </button>
-                  <button onClick={() => setDeleteStudent(student)}>
-                    Delete
+                  <button className="delete-btn" onClick={() => setDeleteStudent(student)}>
+                    <FaTrash/>
                   </button>
                 </td>
               </tr>
             );
           })}
         </tbody>
+        </div>
       </table>
     </div>
   );

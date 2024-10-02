@@ -1,6 +1,17 @@
-// import { useEffect, useState } from "react";
-// import reactLogo from "./assets/react.svg";
-// import viteLogo from "/vite.svg";
+/**
+ * This is the main App component of the React application.
+ * It handles routing between different pages and fetches a CSRF token on component mount.
+ * 
+ * The app includes routes for:
+ * - Homepage
+ * - CollegePage (to display college data)
+ * - ProgramPage (to display program data)
+ * - StudentPage (to display student data)
+ * 
+ * It uses React's Context API to pass the CSRF token across components.
+ */
+
+
 import { useEffect, useState, createContext } from "react";
 import "./App.css";
 import CollegePage from "./CollegeComponents/CollegePage";
@@ -12,11 +23,14 @@ import axios from "axios";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./Homepage";
 
+// Create a context to share the CSRF token across components
 export const CSRFContext = createContext();
 
 function App() {
+  // State to store the CSRF token
   const [csrfToken, setCsrfToken] = useState("");
 
+   // useEffect hook to fetch the CSRF token when the component mounts
   useEffect(() => {
     const fetchCsrfToken = async () => {
       try {
@@ -35,6 +49,7 @@ function App() {
   }, []);
 
   return (
+    // Provide the CSRF token to the app's components via Context API
     <CSRFContext.Provider value={csrfToken}>
       <Router>
         <Routes>
@@ -51,25 +66,3 @@ function App() {
 
 export default App;
 
-{
-  /* <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p> */
-}

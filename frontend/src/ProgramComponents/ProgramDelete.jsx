@@ -1,7 +1,18 @@
+/**
+ * ProgramDelete Component
+ * 
+ * This component displays a confirmation dialog for deleting a program. 
+ * It prompts the user to confirm the action before making the deletion.
+ * 
+ * */
+
+
 import { useContext } from "react";
 import { CSRFContext } from "../App";
 import axios from "axios";
 
+
+// Sends request to the backend containing which program to delete based on the `programsToDelete` props and sends the response to the parent component
 function ProgramDelete({ cancelDelete, deleteCallback, programToDelete }) {
   const csrfToken = useContext(CSRFContext);
 
@@ -29,12 +40,17 @@ function ProgramDelete({ cancelDelete, deleteCallback, programToDelete }) {
     }
   };
 
+
+  // Actual skeleton of the Component
   return (
-    <div>
-      <h3>Delete Program</h3>
+    <div className="delete">
+      <h1 className="delete-warning">WARNING</h1>
+      <h2>Delete Program</h2>
       <p>{`Would you like to delete ${programToDelete.Program_Name}`}</p>
-      <button onClick={deleteProgram}>Yes</button>
-      <button onClick={cancelDelete}>No</button>
+      <div className="options-delete">
+      <button className="confirm-delete" onClick={deleteProgram}>Yes</button>
+      <button className="cancel-delete" onClick={cancelDelete}>No</button>
+      </div>
     </div>
   );
 }

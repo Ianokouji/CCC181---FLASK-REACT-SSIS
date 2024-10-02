@@ -1,3 +1,14 @@
+/**
+ * ProgramForm Component
+ * 
+ * This component handles both adding a new program and updating an existing program's information.
+ * It uses form inputs to capture program details, and dynamically adjusts its behavior based 
+ * on whether the form is for an update or a new entry.
+ * 
+ * */
+
+
+
 import { useState, useEffect, useContext } from "react";
 import { CSRFContext } from "../App";
 import axios from "axios";
@@ -8,12 +19,16 @@ function ProgramForm({
   closeProgramForm,
   errorCallBack,
 }) {
+
+  // States for the fields and csrf token to be used for request
   const [colleges, setColleges] = useState([]);
   const [program_name, setProgramName] = useState("");
   const [program_code, setProgramCode] = useState("");
   const [college_code, setCollegeCode] = useState("");
   const csrfToken = useContext(CSRFContext);
 
+
+  // Sets the data for the fields, if the `programToUpdate` props is empty it means the Form is adding else it is updating
   useEffect(() => {
     setProgramCode(programToUpdate.Program_Code || "");
     setProgramName(programToUpdate.Program_Name || "");
@@ -21,8 +36,12 @@ function ProgramForm({
     fetchColleges();
   }, [programToUpdate]);
 
+
+  // Checks for current state of the form
   const updating = Object.keys(programToUpdate).length !== 0;
 
+
+  // Fetching available colleges for college ComboBox
   const fetchColleges = async () => {
     try {
       const response = await axios.get(
@@ -35,6 +54,8 @@ function ProgramForm({
     }
   };
 
+
+  // Sends request to the backend on which program to update and its new fields
   const updateProgram = async () => {
     try {
       if (!program_code || !program_name || !college_code) {
@@ -56,6 +77,8 @@ function ProgramForm({
           withCredentials: true,
         }
       );
+
+      // Reseting the form after an update operation
       console.log("Program updated successsfully:", response.data);
       setProgramCode("");
       setProgramName("");
@@ -65,6 +88,8 @@ function ProgramForm({
     }
   };
 
+
+   // Sends request to the backend on which program to add and its fields
   const addProgram = async () => {
     try {
       if (!program_code || !program_name || !college_code) {
@@ -86,6 +111,8 @@ function ProgramForm({
           withCredentials: true,
         }
       );
+
+      // Reseting the form after an add operation
       console.log("Program added successsfully:", response.data);
       setProgramCode("");
       setProgramName("");
@@ -95,24 +122,30 @@ function ProgramForm({
     }
   };
 
+
+  // Handling the render of the form based on which state it is in
   const getOperation = () => {
     updating ? updateProgram() : addProgram();
   };
 
+
+  // Handlers for input change in the fields
   const handleComboBox = (e) => {
     setCollegeCode(e.target.value);
   };
 
+
+  // Actual Form skeleton
   return (
-    <div>
+    <div className="form">
       <span
-        className="closeProgramForm"
+        className="closeForm"
         onClick={closeProgramForm}
         style={{ cursor: "pointer" }}
       >
         &times;
       </span>
-      <h3>Add Program</h3>
+      <h3> {updating ? "Update Program" : "Add Program"}</h3>
       <form onSubmit={(e) => e.preventDefault()}>
         <input
           type="text"

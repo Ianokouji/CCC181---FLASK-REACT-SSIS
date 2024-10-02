@@ -1,4 +1,16 @@
+"""
 
+    Configuration Module
+    ---------------------
+    This module loads environment variables from a .env file 
+    and defines a Config class to manage application settings. 
+    The Config class contains essential configuration values 
+    such as the secret key and MySQL database connection 
+    parameters, which are retrieved using the os.getenv() method 
+    to ensure sensitive information is kept secure and 
+    configurable outside the codebase.
+
+"""
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))

@@ -1,3 +1,22 @@
+"""
+
+
+    Student Model
+    --------------
+    This module defines the `Student` class, which serves as a model for managing 
+    student data in the system. It includes methods for performing CRUD (Create, 
+    Read, Update, Delete) operations on the `Students` table in the database. 
+    The class provides functionality to list all students, retrieve a specific 
+    student by their ID, add new students, update existing student details, 
+    delete a student, and search for students by their ID, first name, or last 
+    name. Each method interacts with the database through the established 
+    `db_connection` to ensure efficient data management and retrieval.
+
+
+"""
+
+
+
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))

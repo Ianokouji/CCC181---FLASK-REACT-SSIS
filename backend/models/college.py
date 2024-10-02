@@ -1,3 +1,19 @@
+"""
+
+    College Model
+    -------------
+    This module defines the `College` class, which serves as a model for handling 
+    operations related to colleges in the system. It includes methods for performing 
+    CRUD (Create, Read, Update, Delete) operations on the `colleges` table in the 
+    database. The class provides functionality to list all colleges, add a new college, 
+    update existing college details, delete a college, and search for colleges by name 
+    or code. Each method interacts with the database through the established 
+    `db_connection` to ensure efficient data management.
+
+
+"""
+
+
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
@@ -88,8 +104,5 @@ class College:
 
 
 
-# College.addCollege("COL", "College of Law")
 
-
-# College.addCollege("CEBA","College of Business and Accountancy")
 

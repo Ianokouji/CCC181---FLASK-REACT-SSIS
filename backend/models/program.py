@@ -1,3 +1,21 @@
+"""
+
+    Program Model
+    --------------
+    This module defines the `Program` class, which serves as a model for handling 
+    operations related to academic programs in the system. It includes methods for 
+    performing CRUD (Create, Read, Update, Delete) operations on the `Programs` 
+    table in the database. The class provides functionality to list all programs, 
+    retrieve a specific program by its code, add new programs, update existing program 
+    details, delete a program, and search for programs by name or college code. 
+    Each method interacts with the database through the established `db_connection` 
+    to ensure efficient data management.
+
+
+"""
+
+
+
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
